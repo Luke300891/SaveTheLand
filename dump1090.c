@@ -119,7 +119,7 @@ struct aircraft {
     int even_cprlon;
     double lat, lon;    /* Coordinated obtained from CPR encoded data. */
     long long odd_cprtime, even_cprtime;
-	int distance;       /* Distanza calcolata tra coordinate GPS dell'aereo (se disponibili) e coordinate GPS fisse [Lecco] */
+    int distance;       /* Distanza calcolata tra coordinate GPS dell'aereo (se disponibili) e coordinate GPS fisse [Lecco] */
     struct aircraft *next; /* Next aircraft in our linked list. */
 };
 
@@ -1735,7 +1735,7 @@ void CalculusDistance(struct aircraft *a) {
 	const double LatLecco = 0.8003556;
 	const double LonLecco = 0.1639387;
 	const int AltLecco = 0.214;
-	a->distance = floor(sqrt((acos((sen(a->lat) * sen (LatLecco)) + (cos(a->lat) * cos(LatLecco) * cos((LonLecco) - (a->lon))))) * 6378.137) * (acos((sen(a->lat) * sen (LatLecco)) + (cos(a->lat) * cos(LatLecco) * cos((LonLecco) - (a->lon))))) * 6378.137)) + (((a->altitude) - (AltLecco))* ((a->altitude) - (AltLecco)))));
+	a->distance = floor(sqrt((acos((sin(a->lat) * sin (LatLecco)) + (cos(a->lat) * cos(LatLecco) * cos((LonLecco) - (a->lon))))) * 6378.137) * (acos((sin(a->lat) * sin(LatLecco)) + (cos(a->lat) * cos(LatLecco) * cos((LonLecco) - (a->lon))))) * 6378.137)) + (((a->altitude) - (AltLecco))* ((a->altitude) - (AltLecco)))));
 	
 	
 	
@@ -2439,7 +2439,7 @@ void showHelp(void) {
 "--freq <hz>              Set frequency (default: 1090 Mhz).\n"
 "--ifile <filename>       Read data from file (use '-' for stdin).\n"
 "--interactive            Interactive mode refreshing data on screen.\n"
-"--try					  Modalità prova.\n"3
+"--try					  Modalità prova.\n"
 "--interactive-rows <num> Max number of rows in interactive mode (default: 15).\n"
 "--interactive-ttl <sec>  Remove from list if idle for <sec> (default: 60).\n"
 "--raw                    Show only messages hex values.\n"
