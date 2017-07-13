@@ -1725,17 +1725,18 @@ void decodeCPR(struct aircraft *a) {
         int ni = cprNFunction(rlat1,1);
         int m = floor((((lon0 * (cprNLFunction(rlat1)-1)) -
                         (lon1 * cprNLFunction(rlat1))) / 131072.0) + 0.5);
-        a->lon = (cprDlonFunction(rlat1,1) * (cprModFunction(m,ni)+lon1/131072)) * (pigreco) / 180;
-        a->lat = (rlat1) * (pigreco) / 180;
+        a->lon = cprDlonFunction(rlat1,1) * (cprModFunction(m,ni)+lon1/131072);
+        a->lat = (rlat1)*(pigreco/180);
     }
     if (a->lon > 180) a->lon -= 360;
+	a->lon = a->lon *(pigreco/180);
 }
 
 void CalculusDistance(struct aircraft *a) {
 	const double LatLecco = 0.8003556;
 	const double LonLecco = 0.1639387;
 	const int AltLecco = 0.214;
-	a->distance = floor(sqrt(pow(acos((sin(a->lat) * sin (LatLecco)) + (cos(a->lat) * cos(LatLecco) * cos(LonLecco - a->lon))) * 6378.137, 2)+ pow(a->altitude - AltLecco, 2)));
+	a->distance = floor(sqrt(pow(acos((sen(a->lat) * sen (LatLecco)) + (cos(a->lat) * cos(LatLecco) * cos(LonLecco - a->lon))) * 6378.137, 2)+ pow((a->altitude* 0.0003048) - AltLecco, 2)));
 	
 	
 }
@@ -2437,7 +2438,7 @@ void showHelp(void) {
 "--freq <hz>              Set frequency (default: 1090 Mhz).\n"
 "--ifile <filename>       Read data from file (use '-' for stdin).\n"
 "--interactive            Interactive mode refreshing data on screen.\n"
-"--try					  Modalità prova.\n"
+"--try					  Modalità prova.\n"3
 "--interactive-rows <num> Max number of rows in interactive mode (default: 15).\n"
 "--interactive-ttl <sec>  Remove from list if idle for <sec> (default: 60).\n"
 "--raw                    Show only messages hex values.\n"
