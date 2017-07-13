@@ -1726,17 +1726,17 @@ void decodeCPR(struct aircraft *a) {
         int m = floor((((lon0 * (cprNLFunction(rlat1)-1)) -
                         (lon1 * cprNLFunction(rlat1))) / 131072.0) + 0.5);
         a->lon = cprDlonFunction(rlat1,1) * (cprModFunction(m,ni)+lon1/131072);
-        a->lat = (rlat1)*(pigreco/180);
+        a->lat = rlat1;
     }
     if (a->lon > 180) a->lon -= 360;
-	a->lon = a->lon *(pigreco/180);
 }
 
 void CalculusDistance(struct aircraft *a) {
 	const double LatLecco = 0.8003556;
 	const double LonLecco = 0.1639387;
 	const int AltLecco = 0.214;
-	a->distance = floor(sqrt(pow(acos((sin(a->lat) * sin (LatLecco)) + (cos(a->lat) * cos(LatLecco) * cos(LonLecco - a->lon))) * 6378.137, 2)+ pow((a->altitude* 0.0003048) - AltLecco, 2)));
+	const double rad = pigreco/180;
+	a->distance = floor(sqrt(pow(acos((sin(a->lat*rad) * sin (LatLecco)) + (cos(a->lat*rad) * cos(LatLecco) * cos(LonLecco - (a->lon*rad)))) * 6378.137, 2)+ pow((a->altitude* 0.0003048) - AltLecco, 2)));
 	
 	
 }
