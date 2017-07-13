@@ -2437,7 +2437,7 @@ void showHelp(void) {
 "--freq <hz>              Set frequency (default: 1090 Mhz).\n"
 "--ifile <filename>       Read data from file (use '-' for stdin).\n"
 "--interactive            Interactive mode refreshing data on screen.\n"
-"--try					  Modalità prova.\n"3
+"--try					  Modalità prova.\n"
 "--interactive-rows <num> Max number of rows in interactive mode (default: 15).\n"
 "--interactive-ttl <sec>  Remove from list if idle for <sec> (default: 60).\n"
 "--raw                    Show only messages hex values.\n"
