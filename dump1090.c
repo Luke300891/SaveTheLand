@@ -1735,7 +1735,7 @@ void CalculusDistance(struct aircraft *a) {
 	const double LatLecco = 0.8003556;
 	const double LonLecco = 0.1639387;
 	const int AltLecco = 0.214;
-	a->distance = floor(sqrt(pow(acos((sen(a->lat) * sen (LatLecco)) + (cos(a->lat) * cos(LatLecco) * cos(LonLecco - a->lon))) * 6378.137, 2)+ pow(a->altitude - AltLecco, 2)));
+	a->distance = floor(sqrt(pow(acos((sin(a->lat) * sin (LatLecco)) + (cos(a->lat) * cos(LatLecco) * cos(LonLecco - a->lon))) * 6378.137, 2)+ pow(a->altitude - AltLecco, 2)));
 	
 	
 }
