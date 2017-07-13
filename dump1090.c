@@ -1736,7 +1736,7 @@ void CalculusDistance(struct aircraft *a) {
 	const double LatLecco = 0.8003556;
 	const double LonLecco = 0.1639387;
 	const int AltLecco = 0.214;
-	a->distance = floor(sqrt(pow(acos((sen(a->lat) * sen (LatLecco)) + (cos(a->lat) * cos(LatLecco) * cos(LonLecco - a->lon))) * 6378.137, 2)+ pow((a->altitude* 0.0003048) - AltLecco, 2)));
+	a->distance = floor(sqrt(pow(acos((sin(a->lat) * sin (LatLecco)) + (cos(a->lat) * cos(LatLecco) * cos(LonLecco - a->lon))) * 6378.137, 2)+ pow((a->altitude* 0.0003048) - AltLecco, 2)));
 	
 	
 }
@@ -2438,7 +2438,6 @@ void showHelp(void) {
 "--freq <hz>              Set frequency (default: 1090 Mhz).\n"
 "--ifile <filename>       Read data from file (use '-' for stdin).\n"
 "--interactive            Interactive mode refreshing data on screen.\n"
-"--try					  Modalità prova.\n"3
 "--interactive-rows <num> Max number of rows in interactive mode (default: 15).\n"
 "--interactive-ttl <sec>  Remove from list if idle for <sec> (default: 60).\n"
 "--raw                    Show only messages hex values.\n"
