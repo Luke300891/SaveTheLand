@@ -1836,6 +1836,8 @@ void interactiveShowData(void) {
     progress[3] = '\0';
 
     printf("\x1b[H\x1b[2J");    /* Clear the screen */
+	printf("AWL Activated: %d\n",
+                AWL_Active);
     printf(
 "Hex    Flight   Altitude  Speed   Lat       Lon       Track  Messages   Dist P Seen %s\n"
 "---------------------------------------------------------------------------------------\n",
@@ -1872,8 +1874,7 @@ void interactiveShowData(void) {
 		AWL_Active = 0;
 	}
 	Under_Threshold = 0;
-	printf("AWL Activated: %d",
-                AWL_Active);
+	
 }
 
 /* When in interactive mode If we don't receive new nessages within
