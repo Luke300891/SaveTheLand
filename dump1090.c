@@ -94,6 +94,8 @@
 
 #define MODES_NOTUSED(V) ((void) V)
 #define pigreco 3.1415926
+
+int th = 0;
 /* Structure used to describe a networking client. */
 struct client {
     int fd;         /* File descriptor. */
@@ -1565,7 +1567,7 @@ void useModesMessage(struct modesMessage *mm) {
 
 	void ThresholdInput(void) {
 		
-		
+
 		printf("Please enter a threshold distance value: ");
 		scanf("%d", &th);
 		printf("You entered: %d\n", th);
@@ -1827,6 +1829,7 @@ void interactiveShowData(void) {
 	int AWL_Active = 0;
 	int Under_Threshold = 0;
 	char Prox = 'O';
+	
 
     memset(progress,' ',3);
     progress[time(NULL)%3] = '.';
@@ -2521,7 +2524,6 @@ void backgroundTasks(void) {
 
 int main(int argc, char **argv) {
     int j;
-    int th = 0;
     /* Set sane defaults. */
     modesInitConfig();
     ThresholdInput();
