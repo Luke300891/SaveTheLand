@@ -1839,7 +1839,7 @@ void interactiveShowData(void) {
 	printf("AWL Activated: %d\n",
                 AWL_Active);
     printf(
-"Hex    Flight   Altitude  Speed   Lat       Lon       Track  Messages   Dist P Seen %s\n"
+"Hex    Flight   Altitude  Speed   Lat    Lon    Track  Messages   Dist P U AWL Seen %s\n"
 "---------------------------------------------------------------------------------------\n",
         progress);
 
@@ -1860,9 +1860,9 @@ void interactiveShowData(void) {
 			Prox = 'O';
 		}
 		
-        printf("%-6s %-8s %-9d %-7d %-7.03f   %-7.03f   %-3d   %-9ld %d %c  %d sec\n",
+        printf("%-6s %-8s %-9d %-7d %-7.03f   %-7.03f   %-3d   %-9ld %d %c %d %d %d sec\n",
             a->hexaddr, a->flight, altitude, speed,
-            a->lat, a->lon, a->track, a->messages, a->distance, Prox ,
+            a->lat, a->lon, a->track, a->messages, a->distance, Prox, Under_Threshold, AWL_Active,
             (int)(now - a->seen));
         a = a->next;
         count++;
