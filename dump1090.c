@@ -1820,10 +1820,14 @@ struct aircraft *interactiveReceiveData(struct modesMessage *mm) {
     return a;
 }
 
-void GPIOWrite(int AWL_Active) {
+void GPIOWrite(int Stato) {
 	
-	system("echo AWL_Active > /sys/class/gpio/gpio2/value");
-	
+	if (Stato = 1) {
+		system("echo 1 > /sys/class/gpio/gpio2/value");
+	}
+	else {
+		system("echo 0 > /sys/class/gpio/gpio2/value");
+	}
 }
 /* Show the currently captured interactive data on screen. */
 void interactiveShowData(void) {
