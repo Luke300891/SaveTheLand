@@ -279,6 +279,15 @@ void modesInitConfig(void) {
     Modes.interactive_rows = getTermRows();
 }
 
+void ThresholdInput(void) {
+  int th;
+	printf("Please enter a threshold distance value: ");
+   	scanf("%d", &th);
+        printf("You entered: %d\n", th);
+
+   return 0;
+
+}
 void modesInit(void) {
     int i, q;
 
@@ -2490,10 +2499,10 @@ void backgroundTasks(void) {
 
 int main(int argc, char **argv) {
     int j;
-
+    int th;
     /* Set sane defaults. */
     modesInitConfig();
-
+    ThresholdInput();
     /* Parse the command line options */
     for (j = 1; j < argc; j++) {
         int more = j+1 < argc; /* There are more arguments. */
