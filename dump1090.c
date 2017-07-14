@@ -1822,10 +1822,7 @@ struct aircraft *interactiveReceiveData(struct modesMessage *mm) {
 
 void GPIOWrite(int AWL_Active) {
 	
-	FILE *fp3;
-	fp3 = fopen("/sys/class/gpio/gpio1/value", "w+");
-	fprintf(fp3, "%d", AWL_Active);
-	fclose (fp3);
+	system("echo AWL_Active > /sys/class/gpio/gpio2/value");
 	
 }
 /* Show the currently captured interactive data on screen. */
@@ -2535,14 +2532,9 @@ void backgroundTasks(void) {
 
 void ConfigGPIO(void) {
 	
-	FILE *fp1,*fp2;
+	system("echo 2 > /sys/class/gpio/export");
+	system("echo “out” > /sys/class/gpio/gpio2/direction");
 	
-	fp1 =fopen("/sys/class/gpio/export", "w+");
-	fprintf(fp1, "%d", 2);
-	fclose(fp1);
-	fp2 = fopen("/sys/class/gpio/gpio2/direction", "w+");
-	fprintf(fp2, "%s", "out");
-	fclose(fp2);
 }
 
 int main(int argc, char **argv) {
