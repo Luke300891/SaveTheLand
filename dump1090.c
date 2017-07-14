@@ -1565,7 +1565,7 @@ void useModesMessage(struct modesMessage *mm) {
 
 	void ThresholdInput(void) {
 		
-		int th = 0;
+		
 		printf("Please enter a threshold distance value: ");
 		scanf("%d", &th);
 		printf("You entered: %d\n", th);
@@ -1826,7 +1826,7 @@ void interactiveShowData(void) {
     int count = 0;
 	int AWL_Active = 0;
 	int Under_Threshold = 0;
-	char Prox = "O";
+	char Prox = 'O';
 
     memset(progress,' ',3);
     progress[time(NULL)%3] = '.';
@@ -1849,10 +1849,10 @@ void interactiveShowData(void) {
 
 		if (a->distance < th) {
 			Under_Threshold++;
-			Prox = "X";
+			Prox = 'X';
 		}
 		else {
-			Prox = "O";
+			Prox = 'O';
 		}
 		
         printf("%-6s %-8s %-9d %-7d %-7.03f   %-7.03f   %-3d   %-9ld %d %c  %d sec\n",
@@ -1862,7 +1862,7 @@ void interactiveShowData(void) {
         a = a->next;
         count++;
     }
-	if (Under_Threshold != 0) 
+	if (Under_Threshold != 0) {
 		AWL_Active = 1;
 	}
 	else {
@@ -2521,7 +2521,7 @@ void backgroundTasks(void) {
 
 int main(int argc, char **argv) {
     int j;
-    int th;
+    int th = 0;
     /* Set sane defaults. */
     modesInitConfig();
     ThresholdInput();
