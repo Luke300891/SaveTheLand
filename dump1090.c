@@ -45,6 +45,7 @@
 #include <sys/select.h>
 #include "rtl-sdr.h"
 #include "anet.h"
+#include <stdbool.h>
 
 #define MODES_DEFAULT_RATE         2000000
 #define MODES_DEFAULT_FREQ         1090000000
@@ -1571,7 +1572,7 @@ void useModesMessage(struct modesMessage *mm) {
 		scanf("%d", &th);
 		printf("You entered: %d\n", th);
 
-   return 0;
+   
 	}
 /* ========================= Interactive mode =============================== */
 
@@ -1824,8 +1825,10 @@ void interactiveShowData(void) {
     struct aircraft *a = Modes.aircrafts;
     time_t now = time(NULL);
     char progress[4];
+	int th;
     int count = 0;
 	bool AWL_Active = False;
+	int app = 0;
 	int Under_Threshold = 0;
 	char Prox = "O";
 
@@ -1856,7 +1859,7 @@ void interactiveShowData(void) {
 			Prox = "O";
 		}
 		
-        printf("%-6s %-8s %-9d %-7d %-7.03f   %-7.03f   %-3d   %-9ld %d %d  %char sec\n",
+        printf("%-6s %-8s %-9d %-7d %-7.03f   %-7.03f   %-3d   %-9ld %d %d  %c sec\n",
             a->hexaddr, a->flight, altitude, speed,
             a->lat, a->lon, a->track, a->messages, a->distance, Prox ,
             (int)(now - a->seen));
@@ -1864,14 +1867,18 @@ void interactiveShowData(void) {
         count++;
     }
 	if (Under_Threshold != 0) {
-		AWL_Active=True;
+		if(AWL_Active) {
+			app = 1;
+		}
 	}
 	else {
-		AWL_Active = False;
+		if(AWL_Active = False) {
+			app = 0;
+		}
 	}
 	Under_Threshold = 0;
-	printf("AWL Activated: %b",
-                AWL_Active);
+	printf("AWL Activated: %d",
+                app);
 }
 
 /* When in interactive mode If we don't receive new nessages within
