@@ -1822,7 +1822,7 @@ struct aircraft *interactiveReceiveData(struct modesMessage *mm) {
 
 void GPIOWrite(int Stato) {
 	
-	if (Stato = 1) {
+	if (Stato == 1) {
 		system("echo 1 > /sys/class/gpio/gpio2/value");
 	}
 	else {
