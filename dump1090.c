@@ -1820,6 +1820,14 @@ struct aircraft *interactiveReceiveData(struct modesMessage *mm) {
     return a;
 }
 
+void GPIOWrite(int AWL_Active) {
+	
+	FILE fp3;
+	fp3 = fopen("/sys/class/gpio/gpio1/value", "w+");
+	fprintf(fp3, "%d", AWL_Active);
+	fclose (fp3);
+	
+}
 /* Show the currently captured interactive data on screen. */
 void interactiveShowData(void) {
     struct aircraft *a = Modes.aircrafts;
@@ -1859,19 +1867,20 @@ void interactiveShowData(void) {
 		else {
 			Prox = 'O';
 		}
-		
+		if (Under_Threshold != 0) {
+			AWL_Active = 1;
+		}
+		else {
+			AWL_Active = 0;
+		}
+		GPIOWrite(AWL_Active);
         printf("%-6s %-8s %-9d %-7d %-7.03f   %-7.03f   %-3d   %-9ld %d %c %d %d %d sec\n",
             a->hexaddr, a->flight, altitude, speed,
             a->lat, a->lon, a->track, a->messages, a->distance, Prox, Under_Threshold, AWL_Active,
             (int)(now - a->seen));
         a = a->next;
         count++;
-		if (Under_Threshold != 0) {
-		AWL_Active = 1;
-		}
-		else {
-		AWL_Active = 0;
-		}
+		
     }
 	
 	Under_Threshold = 0;
@@ -2524,11 +2533,24 @@ void backgroundTasks(void) {
     }
 }
 
+void ConfigGPIO(void) {
+	
+	FILE fp1,fp2;
+	
+	fp1 =fopen("/sys/class/gpio/export", "w+");
+	fprintf(fp1, "%d", 2);
+	fclose(fp1);
+	fp2 = fopen("/sys/class/gpio/gpio2/direction", "w+");
+	fprintf(fp2, "%s", "out");
+	fclose(fp2);
+}
+
 int main(int argc, char **argv) {
     int j;
     /* Set sane defaults. */
     modesInitConfig();
     ThresholdInput();
+	ConfigGPIO();
     /* Parse the command line options */
     for (j = 1; j < argc; j++) {
         int more = j+1 < argc; /* There are more arguments. */
