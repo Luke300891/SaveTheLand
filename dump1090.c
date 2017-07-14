@@ -1820,7 +1820,7 @@ struct aircraft *interactiveReceiveData(struct modesMessage *mm) {
     return a;
 }
 
-void GPIOWrite(int Stato) {
+ void GPIOWrite(int Stato) {
 	
 	if (Stato == 1) {
 		system("echo 1 > /sys/class/gpio/gpio2/value");
@@ -1828,7 +1828,8 @@ void GPIOWrite(int Stato) {
 	else {
 		system("echo 0 > /sys/class/gpio/gpio2/value");
 	}
-}
+} 
+	
 /* Show the currently captured interactive data on screen. */
 void interactiveShowData(void) {
     struct aircraft *a = Modes.aircrafts;
@@ -1848,7 +1849,7 @@ void interactiveShowData(void) {
 	printf("AWL Activated: %d\n",
                 AWL_Active);
     printf(
-"Hex    Flight   Altitude  Speed   Lat    Lon    Track  Messages   Dist P U AWL Seen %s\n"
+"Hex    Flight   Altitude  Speed   Lat    Lon   Track  Messages   Dist P U AWL Seen %s\n"
 "---------------------------------------------------------------------------------------\n",
         progress);
 
@@ -1861,7 +1862,7 @@ void interactiveShowData(void) {
             speed *= 1.852;
         }
 
-		if (a->distance < th) {
+		if (a->distance < th && a->distance != 0) {
 			Under_Threshold++;
 			Prox = 'X';
 		}
@@ -1874,7 +1875,7 @@ void interactiveShowData(void) {
 		else {
 			AWL_Active = 0;
 		}
-		GPIOWrite(AWL_Active);
+		GPIOWrite(AWL_Active); 
         printf("%-6s %-8s %-9d %-7d %-7.03f   %-7.03f   %-3d   %-9ld %d %c %d %d %d sec\n",
             a->hexaddr, a->flight, altitude, speed,
             a->lat, a->lon, a->track, a->messages, a->distance, Prox, Under_Threshold, AWL_Active,
