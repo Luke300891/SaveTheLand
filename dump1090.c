@@ -1823,10 +1823,8 @@ void interactiveShowData(void) {
     struct aircraft *a = Modes.aircrafts;
     time_t now = time(NULL);
     char progress[4];
-	int th;
     int count = 0;
-	bool AWL_Active = False;
-	int app = 0;
+	int AWL_Active = 0;
 	int Under_Threshold = 0;
 	char Prox = "O";
 
@@ -1864,19 +1862,15 @@ void interactiveShowData(void) {
         a = a->next;
         count++;
     }
-	if (Under_Threshold != 0) {
-		if(AWL_Active) {
-			app = 1;
-		}
+	if (Under_Threshold != 0) 
+		AWL_Active = 1;
 	}
 	else {
-		if(AWL_Active = False) {
-			app = 0;
-		}
+		AWL_Active = 0;
 	}
 	Under_Threshold = 0;
 	printf("AWL Activated: %d",
-                app);
+                AWL_Active);
 }
 
 /* When in interactive mode If we don't receive new nessages within
