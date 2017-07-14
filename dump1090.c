@@ -164,7 +164,6 @@ struct {
     int net;                        /* Enable networking. */
     int net_only;                   /* Enable just networking. */
     int interactive;                /* Interactive mode */
-	int threshold;					/* Enter threshold distance value [VDGLAB] */
     int interactive_rows;           /* Interactive mode: max number of rows. */
     int interactive_ttl;            /* Interactive mode: TTL before deletion. */
     int stats;                      /* Print stats at exit in --ifile mode. */
@@ -273,7 +272,6 @@ void modesInitConfig(void) {
     Modes.onlyaddr = 0;
     Modes.debug = 0;
     Modes.interactive = 0;
-	Modes.threshold = 0;		/* Inizializzazione modalità try */
     Modes.interactive_rows = MODES_INTERACTIVE_ROWS;
     Modes.interactive_ttl = MODES_INTERACTIVE_TTL;
     Modes.aggressive = 0;
@@ -1567,7 +1565,7 @@ void useModesMessage(struct modesMessage *mm) {
 
 	void ThresholdInput(void) {
 		
-		int th=0;
+		int th = 0;
 		printf("Please enter a threshold distance value: ");
 		scanf("%d", &th);
 		printf("You entered: %d\n", th);
@@ -1859,7 +1857,7 @@ void interactiveShowData(void) {
 			Prox = "O";
 		}
 		
-        printf("%-6s %-8s %-9d %-7d %-7.03f   %-7.03f   %-3d   %-9ld %d %d  %c sec\n",
+        printf("%-6s %-8s %-9d %-7d %-7.03f   %-7.03f   %-3d   %-9ld %d %c  %d sec\n",
             a->hexaddr, a->flight, altitude, speed,
             a->lat, a->lon, a->track, a->messages, a->distance, Prox ,
             (int)(now - a->seen));
@@ -2480,7 +2478,6 @@ void showHelp(void) {
 "--interactive-rows <num> Max number of rows in interactive mode (default: 15).\n"
 "--interactive-ttl <sec>  Remove from list if idle for <sec> (default: 60).\n"
 "--raw                    Show only messages hex values.\n"
-"--threshold              Used to enter threshold distance value.\n"
 "--net                    Enable networking.\n"
 "--net-only               Enable just networking, no RTL device or file used.\n"
 "--net-ro-port <port>     TCP listening port for raw output (default: 30002).\n"
@@ -2575,9 +2572,7 @@ int main(int argc, char **argv) {
             Modes.aggressive++;
         } else if (!strcmp(argv[j],"--interactive")) {
             Modes.interactive = 1;
-		} else if (!strcmp(argv[j],"--threshold")) {
-            Modes.threshold = 1;
-        } else if (!strcmp(argv[j],"--interactive-rows")) {
+		} else if (!strcmp(argv[j],"--interactive-rows")) {
             Modes.interactive_rows = atoi(argv[++j]);
         } else if (!strcmp(argv[j],"--interactive-ttl")) {
             Modes.interactive_ttl = atoi(argv[++j]);
@@ -2619,12 +2614,6 @@ int main(int argc, char **argv) {
     /* Setup for SIGWINCH for handling lines */
     if (Modes.interactive == 1) signal(SIGWINCH, sigWinchCallback);
 
-	/* Enter threshold distance value calling Threshold mode */
-	if (Modes.Threshold == 1) {
-		
-		ThresholdInput();
-		
-	}
     /* Initialization */
     modesInit();
     if (Modes.net_only) {
