@@ -1866,13 +1866,14 @@ void interactiveShowData(void) {
             (int)(now - a->seen));
         a = a->next;
         count++;
-    }
-	if (Under_Threshold != 0) {
+		if (Under_Threshold != 0) {
 		AWL_Active = 1;
-	}
-	else {
+		}
+		else {
 		AWL_Active = 0;
-	}
+		}
+    }
+	
 	Under_Threshold = 0;
 	
 }
