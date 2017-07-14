@@ -163,7 +163,7 @@ struct {
     int net;                        /* Enable networking. */
     int net_only;                   /* Enable just networking. */
     int interactive;                /* Interactive mode */
-	int try;						/* Try mode [VDGLAB] */
+	int threshold;					/* Enter threshold distance value [VDGLAB] */
     int interactive_rows;           /* Interactive mode: max number of rows. */
     int interactive_ttl;            /* Interactive mode: TTL before deletion. */
     int stats;                      /* Print stats at exit in --ifile mode. */
@@ -272,22 +272,14 @@ void modesInitConfig(void) {
     Modes.onlyaddr = 0;
     Modes.debug = 0;
     Modes.interactive = 0;
-	Modes.try = 0;		/* Inizializzazione modalità try */
+	Modes.threshold = 0;		/* Inizializzazione modalità try */
     Modes.interactive_rows = MODES_INTERACTIVE_ROWS;
     Modes.interactive_ttl = MODES_INTERACTIVE_TTL;
     Modes.aggressive = 0;
     Modes.interactive_rows = getTermRows();
 }
 
-void ThresholdInput(void) {
-  int th;
-	printf("Please enter a threshold distance value: ");
-   	scanf("%d", &th);
-        printf("You entered: %d\n", th);
 
-   return 0;
-
-}
 void modesInit(void) {
     int i, q;
 
@@ -1570,7 +1562,17 @@ void useModesMessage(struct modesMessage *mm) {
         }
     }
 }
+/* ========================= Threshold Mode ================================= */
 
+	void ThresholdInput(void) {
+		
+		int th=0;
+		printf("Please enter a threshold distance value: ");
+		scanf("%d", &th);
+		printf("You entered: %d\n", th);
+
+   return 0;
+	}
 /* ========================= Interactive mode =============================== */
 
 /* Return a new aircraft structure for the interactive mode linked list
@@ -1823,6 +1825,9 @@ void interactiveShowData(void) {
     time_t now = time(NULL);
     char progress[4];
     int count = 0;
+	bool AWL_Active = False;
+	int Under_Threshold = 0;
+	char Prox = "O";
 
     memset(progress,' ',3);
     progress[time(NULL)%3] = '.';
@@ -1830,8 +1835,8 @@ void interactiveShowData(void) {
 
     printf("\x1b[H\x1b[2J");    /* Clear the screen */
     printf(
-"Hex    Flight   Altitude  Speed   Lat       Lon       Track  Messages   Dist Seen %s\n"
-"------------------------------------------------------------------------------------\n",
+"Hex    Flight   Altitude  Speed   Lat       Lon       Track  Messages   Dist P Seen %s\n"
+"---------------------------------------------------------------------------------------\n",
         progress);
 
     while(a && count < Modes.interactive_rows) {
@@ -1843,13 +1848,30 @@ void interactiveShowData(void) {
             speed *= 1.852;
         }
 
-        printf("%-6s %-8s %-9d %-7d %-7.03f   %-7.03f   %-3d   %-9ld %d %d sec\n",
+		if (a->distance < th) {
+			Under_Threshold++;
+			Prox = "X";
+		}
+		else {
+			Prox = "O";
+		}
+		
+        printf("%-6s %-8s %-9d %-7d %-7.03f   %-7.03f   %-3d   %-9ld %d %d  %char sec\n",
             a->hexaddr, a->flight, altitude, speed,
-            a->lat, a->lon, a->track, a->messages, a->distance,
+            a->lat, a->lon, a->track, a->messages, a->distance, Prox ,
             (int)(now - a->seen));
         a = a->next;
         count++;
     }
+	if (Under_Threshold != 0) {
+		AWL_Active=True;
+	}
+	else {
+		AWL_Active = False;
+	}
+	Under_Threshold = 0;
+	printf("AWL Activated: %b",
+                AWL_Active);
 }
 
 /* When in interactive mode If we don't receive new nessages within
@@ -1858,6 +1880,7 @@ void interactiveRemoveStaleAircrafts(void) {
     struct aircraft *a = Modes.aircrafts;
     struct aircraft *prev = NULL;
     time_t now = time(NULL);
+
 
     while(a) {
         if ((now - a->seen) > Modes.interactive_ttl) {
@@ -2450,6 +2473,7 @@ void showHelp(void) {
 "--interactive-rows <num> Max number of rows in interactive mode (default: 15).\n"
 "--interactive-ttl <sec>  Remove from list if idle for <sec> (default: 60).\n"
 "--raw                    Show only messages hex values.\n"
+"--threshold              Used to enter threshold distance value.\n"
 "--net                    Enable networking.\n"
 "--net-only               Enable just networking, no RTL device or file used.\n"
 "--net-ro-port <port>     TCP listening port for raw output (default: 30002).\n"
@@ -2544,8 +2568,8 @@ int main(int argc, char **argv) {
             Modes.aggressive++;
         } else if (!strcmp(argv[j],"--interactive")) {
             Modes.interactive = 1;
-		} else if (!strcmp(argv[j],"--try")) {
-            Modes.try = 1;
+		} else if (!strcmp(argv[j],"--threshold")) {
+            Modes.threshold = 1;
         } else if (!strcmp(argv[j],"--interactive-rows")) {
             Modes.interactive_rows = atoi(argv[++j]);
         } else if (!strcmp(argv[j],"--interactive-ttl")) {
@@ -2588,6 +2612,12 @@ int main(int argc, char **argv) {
     /* Setup for SIGWINCH for handling lines */
     if (Modes.interactive == 1) signal(SIGWINCH, sigWinchCallback);
 
+	/* Enter threshold distance value calling Threshold mode */
+	if (Modes.Threshold == 1) {
+		
+		ThresholdInput();
+		
+	}
     /* Initialization */
     modesInit();
     if (Modes.net_only) {
