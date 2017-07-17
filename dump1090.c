@@ -2546,8 +2546,9 @@ int main(int argc, char **argv) {
     int j;
     /* Set sane defaults. */
     modesInitConfig();
+    ConfigGPIO();
     ThresholdInput();
-	ConfigGPIO();
+	
     /* Parse the command line options */
     for (j = 1; j < argc; j++) {
         int more = j+1 < argc; /* There are more arguments. */
