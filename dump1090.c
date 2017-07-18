@@ -1823,10 +1823,10 @@ struct aircraft *interactiveReceiveData(struct modesMessage *mm) {
  void GPIOWrite(int Stato) {
 	
 	if (Stato == 1) {
-		system("echo 1 > /sys/class/gpio/gpio2/value");
+		system("echo 1 > /sys/class/gpio/gpio17/value");
 	}
 	else {
-		system("echo 0 > /sys/class/gpio/gpio2/value");
+		system("echo 0 > /sys/class/gpio/gpio17/value");
 	}
 } 
 	
@@ -2537,8 +2537,8 @@ void backgroundTasks(void) {
 
 void ConfigGPIO(void) {
 	
-	system("echo 2 > /sys/class/gpio/export");
-	system("echo “out” > /sys/class/gpio/gpio2/direction");
+	system("echo 17 > /sys/class/gpio/export");
+	system("echo “out” > /sys/class/gpio/gpio17/direction");
 	
 }
 
