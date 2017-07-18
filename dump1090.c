@@ -46,6 +46,7 @@
 #include "rtl-sdr.h"
 #include "anet.h"
 #include <stdbool.h>
+#include <wiringPi.h>
 
 #define MODES_DEFAULT_RATE         2000000
 #define MODES_DEFAULT_FREQ         1090000000
@@ -1820,7 +1821,7 @@ struct aircraft *interactiveReceiveData(struct modesMessage *mm) {
     return a;
 }
 
- void GPIOWrite(int Stato) {
+ /* void GPIOWrite(int Stato) {
 	
 	if (Stato == 1) {
 		system("echo 1 > /sys/class/gpio/gpio17/value");
@@ -1828,8 +1829,17 @@ struct aircraft *interactiveReceiveData(struct modesMessage *mm) {
 	else {
 		system("echo 0 > /sys/class/gpio/gpio17/value");
 	}
-} 
+} 	*/
 	
+	void GPIOWriteWir (int Stato) {
+		
+		if (Stato == 1) {
+			digitalWrite(0, HIGH);
+		}
+		else {
+			digitalWrite(0,LOW);
+		}
+	}
 /* Show the currently captured interactive data on screen. */
 void interactiveShowData(void) {
     struct aircraft *a = Modes.aircrafts;
@@ -1875,7 +1885,8 @@ void interactiveShowData(void) {
 		else {
 			AWL_Active = 0;
 		}
-		GPIOWrite(AWL_Active); 
+		/* GPIOWrite(AWL_Active); */
+		GPIOWriteWir (AWL_Active);
         printf("%-6s %-8s %-9d %-7d %-7.03f   %-7.03f   %-3d   %-9ld %d %c %d %d %d sec\n",
             a->hexaddr, a->flight, altitude, speed,
             a->lat, a->lon, a->track, a->messages, a->distance, Prox, Under_Threshold, AWL_Active,
@@ -2535,18 +2546,24 @@ void backgroundTasks(void) {
     }
 }
 
-void ConfigGPIO(void) {
+/* void ConfigGPIO(void) {
 	
 	system("echo 17 > /sys/class/gpio/export");
 	system("echo “out” > /sys/class/gpio/gpio17/direction");
 	
-}
-
+} */
+	void ConfigOutput (void) {
+		wiringPiSetup();
+		pinMode (0, OUTPUT);
+		digitalWrite (0, LOW);
+	}
+	
 int main(int argc, char **argv) {
     int j;
     /* Set sane defaults. */
     modesInitConfig();
-    ConfigGPIO();
+	ConfigOutput();
+    /* ConfigGPIO(); */
     ThresholdInput();
 	
     /* Parse the command line options */
