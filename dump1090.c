@@ -2548,7 +2548,7 @@ void backgroundTasks(void) {
 
  void ConfigGPIO(void) {
 	
-	system("su - pi -c \"fetchmail > /dev/null\"");
+	system("sudo -i");
 	system("echo 17 > /sys/class/gpio/export");
 	system("echo “out” > /sys/class/gpio/gpio17/direction");
 	
