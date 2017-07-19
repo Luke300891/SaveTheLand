@@ -2551,7 +2551,7 @@ void ConfigGPIO(void) {
 	
 	DIR* dir = opendir("gpio17");
 	
-	if (dir) {
+	if (!dir) {
 	system("echo 17 > /sys/class/gpio/export");
 	}
 	sleep(1);
