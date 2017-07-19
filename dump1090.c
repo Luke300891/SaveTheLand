@@ -2549,6 +2549,7 @@ void backgroundTasks(void) {
  void ConfigGPIO(void) {
 	printf("Export \n");
 	system("echo 17 > /sys/class/gpio/export");
+	sleep(1);
 	printf("Direction \n");
 	system("echo ""out"" > /sys/class/gpio/gpio17/direction");
 	
