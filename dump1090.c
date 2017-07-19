@@ -36,6 +36,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <math.h>
+#include <dirent.h>
 #include <sys/time.h>
 #include <signal.h>
 #include <fcntl.h>
@@ -2546,12 +2547,15 @@ void backgroundTasks(void) {
     }
 }
 
- void ConfigGPIO(void) {
-	printf("Export \n");
+void ConfigGPIO(void) {
+	
+	DIR* dir = opendir("gpio17");
+	
+	if (dir) {
 	system("echo 17 > /sys/class/gpio/export");
+	}
 	sleep(1);
-	printf("Direction \n");
-	system("echo ""out"" > /sys/class/gpio/gpio17/direction");
+	system("echo ""out"" > /sys/class/gpio/gpio17/direction"); 
 	
 } 
 /*	void ConfigOutput (void) {
@@ -2565,7 +2569,7 @@ int main(int argc, char **argv) {
     /* Set sane defaults. */
     modesInitConfig();
 	/* ConfigOutput(); */
-    ConfigGPIO();
+    /* ConfigGPIO(); */
 	
     ThresholdInput();
 	
