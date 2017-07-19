@@ -2549,7 +2549,7 @@ void backgroundTasks(void) {
  void ConfigGPIO(void) {
 	
 	system("echo 17 > /sys/class/gpio/export");
-	system("echo “out” > /sys/class/gpio/gpio17/direction");
+	system("echo "out" > /sys/class/gpio/gpio17/direction");
 	
 } 
 /*	void ConfigOutput (void) {
