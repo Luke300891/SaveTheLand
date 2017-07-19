@@ -2552,12 +2552,13 @@ void backgroundTasks(void) {
 
 void ConfigGPIO(void) {
 	
-	DIR* dir = opendir("gpio17");
+	/* DIR* dir = opendir("gpio17"); */
 	
-	if (ENOENT == errno) {
+	/* if (ENOENT == errno) {
 	system("echo 17 > /sys/class/gpio/export");
 	}
-	closedir(dir);
+	closedir(dir); */
+	system("echo 17 > /sys/class/gpio_/export");
 	sleep(1);
 	system("echo ""out"" > /sys/class/gpio/gpio17/direction"); 
 	
