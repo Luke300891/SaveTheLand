@@ -44,6 +44,8 @@
 #include <sys/stat.h>
 #include <sys/ioctl.h>
 #include <sys/select.h>
+#include <sys/types.h>
+#include <errno.h>
 #include "rtl-sdr.h"
 #include "anet.h"
 #include <stdbool.h>
@@ -98,6 +100,7 @@
 #define pigreco 3.1415926
 
 int th = 0;
+int c = 0;
 /* Structure used to describe a networking client. */
 struct client {
     int fd;         /* File descriptor. */
@@ -2551,9 +2554,10 @@ void ConfigGPIO(void) {
 	
 	DIR* dir = opendir("gpio17");
 	
-	if (!dir) {
+	if (ENOENT == errno) {
 	system("echo 17 > /sys/class/gpio/export");
 	}
+	closedir(dir);
 	sleep(1);
 	system("echo ""out"" > /sys/class/gpio/gpio17/direction"); 
 	
