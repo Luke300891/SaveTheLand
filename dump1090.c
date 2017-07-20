@@ -1863,8 +1863,8 @@ void interactiveShowData(void) {
 	printf("AWL Activated: %d\n",
                 AWL_Active);
     printf(
-"Hex    Flight   Altitude  Speed   Lat      Lon      Track    Messages   Dist 	P 	U 	AWL  Seen %s\n"
-"---------------------------------------------------------------------------------------------------\n",
+"Hex    Flight   Altitude  Speed   Lat        Lon      Track    Messages   		Dist 		P U AWL  Seen %s\n"
+"-----------------------------------------------------------------------------------------------------------\n",
         progress);
 
     while(a && count < Modes.interactive_rows) {
