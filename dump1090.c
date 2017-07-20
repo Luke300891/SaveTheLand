@@ -1863,8 +1863,8 @@ void interactiveShowData(void) {
 	printf("AWL Activated: %d\n",
                 AWL_Active);
     printf(
-"Hex    Flight   Altitude  Speed   Lat    Lon   Track  Messages   Dist P U AWL Seen %s\n"
-"---------------------------------------------------------------------------------------\n",
+"Hex    Flight   Altitude  Speed   Lat      Lon      Track    Messages   Dist 	P 	U 	AWL  Seen %s\n"
+"---------------------------------------------------------------------------------------------------\n",
         progress);
 
     while(a && count < Modes.interactive_rows) {
@@ -1891,7 +1891,8 @@ void interactiveShowData(void) {
 		}
 		GPIOWrite(AWL_Active); 
 		/* GPIOWriteWir (AWL_Active); */
-        printf("%-6s %-8s %-9d %-7d %-7.03f   %-7.03f   %-3d   %-9ld %d %c %d %d %d sec\n",
+        printf(
+"%-6s   %-8s    %-9d      %-7d   %-7.03f  %-7.03f   %-3d   %-9ld       %d     %c  %d   %d   %d sec\n",
             a->hexaddr, a->flight, altitude, speed,
             a->lat, a->lon, a->track, a->messages, a->distance, Prox, Under_Threshold, AWL_Active,
             (int)(now - a->seen));
