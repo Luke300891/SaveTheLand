@@ -1749,12 +1749,15 @@ void decodeCPR(struct aircraft *a) {
 }
 
 void CalculusDistance(struct aircraft *a) {
-	const double LatLecco = 0.80036037;
-	const double LonLecco = 0.16394489;
-	const int AltLecco = 0.214;
+	/*const double LatLecco = 0.80036037;
+	const double LonLecco = 0.16394489;*/
+	const double LatBresso = 0.7948520360;
+	const double LonBresso = 0.1606284630;
+	/*const int AltLecco = 0.214;*/
+	const int AltBresso = 0.150;
 	const double rad = pigreco/180;
-	a->distance = floor(1000*sqrt(pow(acos((sin(a->lat*rad) * sin (LatLecco)) + (cos(a->lat*rad) * cos(LatLecco) * cos(LonLecco - (a->lon*rad)))) * 6378.137, 2)+ pow((a->altitude* 0.0003048) - AltLecco, 2)));
-	
+	/*a->distance = floor(1000*sqrt(pow(acos((sin(a->lat*rad) * sin (LatLecco)) + (cos(a->lat*rad) * cos(LatLecco) * cos(LonLecco - (a->lon*rad)))) * 6378.137, 2)+ pow((a->altitude* 0.0003048) - AltLecco, 2)));*/
+	a->distance = floor(1000*sqrt(pow(acos((sin(a->lat*rad) * sin (LatBresso)) + (cos(a->lat*rad) * cos(LatBresso) * cos(LonBresso - (a->lon*rad)))) * 6378.137, 2)+ pow((a->altitude* 0.0003048) - AltBresso, 2)));
 	
 }
 /* Receive new messages and populate the interactive mode with more info. */
@@ -2397,7 +2400,7 @@ void modesReadFromClient(struct client *c, char *sep,
          * for simplicity. */
         while ((p = strstr(c->buf, sep)) != NULL) {
             i = p - c->buf; /* Turn it as an index inside the buffer. */
-            c->buf[i] = '\0'; /* Te handler expects null terminated strings. */
+				c->buf[i] = '\0'; /* Te handler expects null terminated strings. */
             /* Call the function to process the message. It returns 1
              * on error to signal we should close the client connection. */
             if (handler(c)) {
