@@ -85,7 +85,7 @@
 #define MODES_DEBUG_NOPREAMBLE_LEVEL 25
 
 #define MODES_INTERACTIVE_REFRESH_TIME 250      /* Milliseconds */
-#define MODES_INTERACTIVE_ROWS 15               /* Rows on screen */
+#define MODES_INTERACTIVE_ROWS 80               /* Rows on screen */
 #define MODES_INTERACTIVE_TTL 60                /* TTL before being removed */
 
 #define MODES_NET_MAX_FD 1024
@@ -1749,15 +1749,15 @@ void decodeCPR(struct aircraft *a) {
 }
 
 void CalculusDistance(struct aircraft *a) {
-	/*const double LatLecco = 0.80036037;
-	const double LonLecco = 0.16394489;*/
-	const double LatBresso = 0.7948520360;
-	const double LonBresso = 0.1606284630;
-	/*const int AltLecco = 0.214;*/
-	const int AltBresso = 0.150;
+	const double LatLecco = 0.80036037;
+	const double LonLecco = 0.16394489;
+	/*const double LatBresso = 0.7948520360;*/
+	/*const double LonBresso = 0.1606284630;*/
+	const int AltLecco = 0.214;
+	/*const int AltBresso = 0.150;*/
 	const double rad = pigreco/180;
-	/*a->distance = floor(1000*sqrt(pow(acos((sin(a->lat*rad) * sin (LatLecco)) + (cos(a->lat*rad) * cos(LatLecco) * cos(LonLecco - (a->lon*rad)))) * 6378.137, 2)+ pow((a->altitude* 0.0003048) - AltLecco, 2)));*/
-	a->distance = floor(1000*sqrt(pow(acos((sin(a->lat*rad) * sin (LatBresso)) + (cos(a->lat*rad) * cos(LatBresso) * cos(LonBresso - (a->lon*rad)))) * 6378.137, 2)+ pow((a->altitude* 0.0003048) - AltBresso, 2)));
+	a->distance = floor(1000*sqrt(pow(acos((sin(a->lat*rad) * sin (LatLecco)) + (cos(a->lat*rad) * cos(LatLecco) * cos(LonLecco - (a->lon*rad)))) * 6378.137, 2)+ pow((a->altitude* 0.0003048) - AltLecco, 2)));
+	/*a->distance = floor(1000*sqrt(pow(acos((sin(a->lat*rad) * sin (LatBresso)) + (cos(a->lat*rad) * cos(LatBresso) * cos(LonBresso - (a->lon*rad)))) * 6378.137, 2)+ pow((a->altitude* 0.0003048) - AltBresso, 2)));*/
 	
 }
 /* Receive new messages and populate the interactive mode with more info. */
@@ -1828,7 +1828,7 @@ struct aircraft *interactiveReceiveData(struct modesMessage *mm) {
     return a;
 }
 
-  void GPIOWrite(int Stato) {
+  /*void GPIOWrite(int Stato) {
 	
 	if (Stato == 1) {
 		system("echo 1 > /sys/class/gpio/gpio17/value");
@@ -1836,7 +1836,17 @@ struct aircraft *interactiveReceiveData(struct modesMessage *mm) {
 	else {
 		system("echo 0 > /sys/class/gpio/gpio17/value");
 	}
-} 	
+} 	*/
+
+void I2CWrite(int Stato) {
+	
+	if (Stato == 1) {
+		system("i2cset -y 1 0x20 2 0xE000 w");
+	}
+	else {
+		system("i2cset -y 1 0x20 2 0xF000 w");
+	}
+} 
 	
 /*	void GPIOWriteWir (int Stato) {
 		
@@ -1886,19 +1896,18 @@ void interactiveShowData(void) {
 		else {
 			Prox = 'O';
 		}
-		if (Under_Threshold != 0) {
+		if (Under_Threshold != 0 && AWL_Active != 1) {
 			AWL_Active = 1;
 		}
 		else {
 			AWL_Active = 0;
 		}
-		GPIOWrite(AWL_Active); 
+			I2CWrite(AWL_Active); 
 		/* GPIOWriteWir (AWL_Active); */
         printf(
 "%-6s   %-8s  %-9d  %-7d   %-7.03f  %-7.03f   %-3d   %-9ld      %d     %c  %d   %d   %d sec\n",
             a->hexaddr, a->flight, altitude, speed,
-            a->lat, a->lon, a->track, a->messages, a->distance, Prox, Under_Threshold, AWL_Active,
-            (int)(now - a->seen));
+            a->lat, a->lon, a->track, a->messages, a->distance, Prox, Under_Threshold, (int)(now - a->seen));
         a = a->next;
         count++;
 		
@@ -2554,7 +2563,7 @@ void backgroundTasks(void) {
     }
 }
 
-void ConfigGPIO(void) {
+/*void ConfigGPIO(void) {
 	
 	 DIR* dir = opendir("gpio17"); 
 	
@@ -2562,11 +2571,17 @@ void ConfigGPIO(void) {
 	system("echo 17 > /sys/class/gpio/export");
 	}
 	closedir(dir); 
-	/* system("echo 17 > /sys/class/gpio_/export"); */
+	 
 	sleep(1);
 	system("echo ""out"" > /sys/class/gpio/gpio17/direction"); 
 	
-} 
+}
+*/
+void ConfigI2C (void) {
+	
+	system("i2cset -y 1 0x20 4 0x0FFF w");
+	system("i2cset -y 1 0x20 6 0x0FFF w");
+}
 /*	void ConfigOutput (void) {
 		wiringPiSetup();
 		pinMode (0, OUTPUT);
@@ -2578,7 +2593,7 @@ int main(int argc, char **argv) {
     /* Set sane defaults. */
     modesInitConfig();
 	/* ConfigOutput(); */
-    ConfigGPIO(); 
+    ConfigI2C(); 
 	
     ThresholdInput();
 	
